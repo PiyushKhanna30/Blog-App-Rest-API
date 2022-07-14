@@ -2,6 +2,8 @@ package com.piyush.blog.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ public class UserController {
 
 	// update user
 	@PutMapping("/{userId}")
-	public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable("userId") Integer uId) {
+	public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable("userId") Integer uId) {
 		UserDto userDto2 = userService.updateUser(userDto, uId);
 		return new ResponseEntity<UserDto>(userDto2, HttpStatus.OK);
 	}
@@ -48,7 +50,7 @@ public class UserController {
 
 	// create user
 	@PostMapping("/")
-	public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
 		UserDto userDto2 = userService.createUser(userDto);
 		return new ResponseEntity<UserDto>(userDto2, HttpStatus.CREATED);
 	}
