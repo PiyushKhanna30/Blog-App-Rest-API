@@ -19,6 +19,7 @@ import com.piyush.blog.payloads.ApiResponse;
 import com.piyush.blog.payloads.PostDto;
 import com.piyush.blog.payloads.PostResponse;
 import com.piyush.blog.services.PostService;
+import com.piyush.blog.utilities.AppConstants;
 
 @RestController
 @RequestMapping("/api")
@@ -51,18 +52,18 @@ public class PostController {
 
 	@GetMapping(value = "/posts")
 	public ResponseEntity<PostResponse> getPosts(
-			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
-			@RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
-			@RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
-			@RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir) {
+			@RequestParam(value = "pageNumber", required = false, defaultValue = AppConstants.PAGE_NUMBER) int pageNumber,
+			@RequestParam(value = "pageSize", required = false, defaultValue = AppConstants.PAGE_SIZE) int pageSize,
+			@RequestParam(value = "sortBy", required = false, defaultValue = AppConstants.SORT_BY) String sortBy,
+			@RequestParam(value = "sortDir", required = false, defaultValue = AppConstants.SORT_DIR) String sortDir) {
 		return new ResponseEntity<PostResponse>(postService.getPosts(pageNumber, pageSize, sortBy, sortDir),
 				HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/users/{uId}/posts")
 	public ResponseEntity<PostResponse> getPostsByUser(
-			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
-			@RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
+			@RequestParam(value = "pageNumber", required = false, defaultValue = AppConstants.PAGE_NUMBER) int pageNumber,
+			@RequestParam(value = "pageSize", required = false, defaultValue = AppConstants.PAGE_SIZE) int pageSize,
 			@PathVariable(name = "uId") int userId) {
 		return new ResponseEntity<PostResponse>(postService.getPostsByUser(pageNumber, pageSize, userId),
 				HttpStatus.OK);
@@ -70,10 +71,18 @@ public class PostController {
 
 	@GetMapping(value = "/categories/{cId}/posts")
 	public ResponseEntity<PostResponse> getPostsByCategory(
-			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
-			@RequestParam(value = "pageSize", required = false, defaultValue = "5") int pageSize,
+			@RequestParam(value = "pageNumber", required = false, defaultValue = AppConstants.PAGE_NUMBER) int pageNumber,
+			@RequestParam(value = "pageSize", required = false, defaultValue = AppConstants.PAGE_SIZE) int pageSize,
 			@PathVariable(name = "cId") int categoryId) {
 		return new ResponseEntity<PostResponse>(postService.getPostsByCategory(pageNumber, pageSize, categoryId),
 				HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/posts/search/{keyword}")
+	public ResponseEntity<PostResponse> getPostsByTitle(
+			@RequestParam(value = "pageNumber", required = false, defaultValue = AppConstants.PAGE_NUMBER) int pageNumber,
+			@RequestParam(value = "pageSize", required = false, defaultValue = AppConstants.PAGE_SIZE) int pageSize,
+			@PathVariable(name = "keyword") String keyword) {
+		return new ResponseEntity<PostResponse>(postService.searchPosts(pageNumber, pageSize, keyword), HttpStatus.OK);
 	}
 }

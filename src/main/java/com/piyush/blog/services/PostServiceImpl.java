@@ -1,6 +1,7 @@
 package com.piyush.blog.services;
 
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -131,6 +132,33 @@ public class PostServiceImpl implements PostService {
 		postResponse.setLastPage(postsPage.isLast());
 		postResponse.setTotalPages(postsPage.getTotalPages());
 		return postResponse;
+	}
+
+	@Override
+	public PostResponse searchPosts(int pageNumber, int pageSize, String keyword) {
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+		Page<Post> postsPage = postRepo.findByTitleContaining(keyword, pageable);
+
+		PostResponse postResponse = new PostResponse();
+		postResponse.setContent(postsPage.getContent().stream().map(post -> modelMapper.map(post, PostDto.class))
+				.collect(Collectors.toList()));
+		postResponse.setPageNumber(postsPage.getNumber());
+		postResponse.setPageSize(postsPage.getSize());
+		postResponse.setTotalElements(postsPage.getTotalElements());
+		postResponse.setLastPage(postsPage.isLast());
+		postResponse.setTotalPages(postsPage.getTotalPages());
+
+		searchPostsByTitle(keyword);
+		return postResponse;
+	}
+
+	@Override
+	public List<PostDto> searchPostsByTitle(String keyword) {
+		List<PostDto> postDtos = postRepo.findByTitleContaining("%"+keyword+"%").stream()
+				.map(post -> modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+		postDtos.stream().forEach(p -> System.err.println(p.getTitle()));
+		return postDtos;
 	}
 
 }
