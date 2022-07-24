@@ -1,5 +1,7 @@
 package com.piyush.blog.exceptions;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.piyush.blog.payloads.ApiResponse;
+import com.piyush.blog.utilities.AppConstants;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -21,6 +24,13 @@ public class GlobalExceptionHandler {
 
 	}
 
+	@ExceptionHandler(ImageNotFoundException.class)
+	public ResponseEntity<ApiResponse> imageNotFoundException(ImageNotFoundException ex) {
+		String message = ex.getMessage();
+		return new ResponseEntity<ApiResponse>(new ApiResponse(message, false), HttpStatus.BAD_REQUEST);
+
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Map<String, String>> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
 		Map<String, String> message = new HashMap<>();
@@ -28,6 +38,17 @@ public class GlobalExceptionHandler {
 			message.put(error.getField(), error.getDefaultMessage());
 		});
 		return new ResponseEntity<Map<String, String>>(message, HttpStatus.NOT_ACCEPTABLE);
+	}
 
+	@ExceptionHandler(FileNotFoundException.class)
+	public ResponseEntity<ApiResponse> fileNotFoundException(FileNotFoundException ex) {
+		String message = AppConstants.FNF_MESSAGE;
+		return new ResponseEntity<ApiResponse>(new ApiResponse(message, false), HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(IOException.class)
+	public ResponseEntity<ApiResponse> ioException(IOException ex) {
+		String message = AppConstants.IO_MESSAGE;
+		return new ResponseEntity<ApiResponse>(new ApiResponse(message, false), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
