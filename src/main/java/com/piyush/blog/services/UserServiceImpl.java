@@ -5,11 +5,13 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.piyush.blog.entities.User;
 import com.piyush.blog.exceptions.ResourceNotFoundException;
 import com.piyush.blog.payloads.UserDto;
+import com.piyush.blog.repositories.RoleRepo;
 import com.piyush.blog.repositories.UserRepo;
 
 @Service
@@ -20,6 +22,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+	@Autowired
+	RoleRepo roleRepository;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDto createUser(UserDto userDto) {
@@ -65,11 +73,11 @@ public class UserServiceImpl implements UserService {
 
 	private User dtoToUser(UserDto userDto) {
 		User user = this.modelMapper.map(userDto, User.class);
-//		user.setId(userDto.getId());
-//		user.setName(userDto.getName());
-//		user.setEmail(userDto.getEmail());
-//		user.setAbout(userDto.getAbout());
-//		user.setPassword(userDto.getPassword());
+		/**
+		 * user.setId(userDto.getId()); user.setName(userDto.getName());
+		 * user.setEmail(userDto.getEmail()); user.setAbout(userDto.getAbout());
+		 * user.setPassword(userDto.getPassword());
+		 **/
 		return user;
 	}
 
@@ -77,4 +85,20 @@ public class UserServiceImpl implements UserService {
 		UserDto userDto = this.modelMapper.map(user, UserDto.class);
 		return userDto;
 	}
+
+	/**
+	 * @PostConstruct public void addDemoUsers() { Role roleUser = new Role("user");
+	 *                Role roleAdmin = new Role("admin");
+	 *                roleRepository.save(roleUser); roleRepository.save(roleAdmin);
+	 * 
+	 *                Set<Role> rolesList = new HashSet<>();
+	 *                rolesList.add(roleUser); User user = new User("Jaideep",
+	 *                "educationmaster30@gmail.com",
+	 *                this.passwordEncoder.encode("password"), rolesList);
+	 *                userRepo.save(user); rolesList.add(roleAdmin); userRepo.save(
+	 *                new User("Piyush", "khanna.piyush30@gmail.com",
+	 *                this.passwordEncoder.encode("password"), rolesList));
+	 * 
+	 *                }
+	 **/
 }
