@@ -24,8 +24,8 @@ public class GlobalExceptionHandler {
 
 	}
 
-	@ExceptionHandler(ImageNotFoundException.class)
-	public ResponseEntity<ApiResponse> imageNotFoundException(ImageNotFoundException ex) {
+	@ExceptionHandler(APIException.class)
+	public ResponseEntity<ApiResponse> imageNotFoundException(APIException ex) {
 		String message = ex.getMessage();
 		return new ResponseEntity<ApiResponse>(new ApiResponse(message, false), HttpStatus.BAD_REQUEST);
 

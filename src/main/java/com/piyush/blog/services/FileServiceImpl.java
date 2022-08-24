@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.piyush.blog.exceptions.ImageNotFoundException;
+import com.piyush.blog.exceptions.APIException;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -20,10 +20,10 @@ public class FileServiceImpl implements FileService {
 	@Override
 	public String uploadImage(String path, MultipartFile file, int postId) throws IOException {
 		if (file.getSize() == 0)
-			throw new ImageNotFoundException("Image not found.");
+			throw new APIException("Image not found.");
 		else if (!file.getContentType().equals(MediaType.IMAGE_JPEG_VALUE)
 				&& !file.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
-			throw new ImageNotFoundException("Image formats allowed are jpeg/png.");
+			throw new APIException("Image formats allowed are jpeg/png.");
 
 // create folder if not exists
 		File file2 = new File(path);
