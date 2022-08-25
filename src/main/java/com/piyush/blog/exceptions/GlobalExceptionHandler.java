@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -50,5 +51,11 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ApiResponse> ioException(IOException ex) {
 		String message = AppConstants.IO_MESSAGE;
 		return new ResponseEntity<ApiResponse>(new ApiResponse(message, false), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<ApiResponse> accessDeniedException(AccessDeniedException ex) {
+		String message = AppConstants.ACD_MESSAGE;
+		return new ResponseEntity<ApiResponse>(new ApiResponse(message, false), HttpStatus.FORBIDDEN);
 	}
 }
