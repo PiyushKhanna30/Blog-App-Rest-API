@@ -2,6 +2,7 @@ package com.piyush.blog.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,7 +40,9 @@ public class User implements UserDetails {
 	private int id;
 	@Column(name = "user_name", nullable = false, length = 100)
 	private String name;
+	@Column(name = "email", nullable = false, length = 100, unique = true)
 	private String email;
+	@Column(name = "password", nullable = false, length = 100)
 	private String password;
 	private String about;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -47,7 +50,7 @@ public class User implements UserDetails {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "id"))
-	private Set<Role> roles;
+	private Set<Role> roles = new HashSet<>();
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.piyush.blog.exceptions.APIException;
 import com.piyush.blog.payloads.JwtAuthRequest;
+import com.piyush.blog.payloads.UserDto;
 import com.piyush.blog.security.JwtAuthResponse;
 import com.piyush.blog.security.JwtTokenHelper;
 import com.piyush.blog.services.UserService;
@@ -66,4 +67,10 @@ public class AuthController {
 
 	}
 
+	@PostMapping("/register")
+	public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto) {
+		UserDto registeredUser = this.userService.registerNewUser(userDto);
+
+		return new ResponseEntity<UserDto>(registeredUser, HttpStatus.CREATED);
+	}
 }

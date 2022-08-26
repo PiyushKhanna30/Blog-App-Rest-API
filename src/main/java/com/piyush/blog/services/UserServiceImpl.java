@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.piyush.blog.entities.Role;
 import com.piyush.blog.entities.User;
 import com.piyush.blog.exceptions.ResourceNotFoundException;
 import com.piyush.blog.payloads.UserDto;
@@ -84,6 +85,16 @@ public class UserServiceImpl implements UserService {
 	private UserDto userToDto(User user) {
 		UserDto userDto = this.modelMapper.map(user, UserDto.class);
 		return userDto;
+	}
+
+	@Override
+	public UserDto registerNewUser(UserDto user) {
+		User user2 = this.modelMapper.map(user, User.class);
+		user2.setPassword(passwordEncoder.encode(user2.getPassword()));
+		Role role = roleRepository.findByName("ROLE_USER");
+		user2.getRoles().add(role);
+		userRepo.save(user2);
+		return this.modelMapper.map(user2, UserDto.class);
 	}
 
 	/**
