@@ -20,6 +20,9 @@ import com.piyush.blog.payloads.ApiResponse;
 import com.piyush.blog.payloads.CategoryDto;
 import com.piyush.blog.services.CategoryService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
@@ -33,11 +36,13 @@ public class CategoryController {
 	}
 
 	@GetMapping(value = "/{categoryId}")
-	ResponseEntity<CategoryDto> getCategory(@PathVariable(name = "categoryId") Integer id) {
+	ResponseEntity<CategoryDto> getCategory(
+			@ApiParam(value = "Id for category to retrieve", required = true) @PathVariable(name = "categoryId") Integer id) {
 		return new ResponseEntity<CategoryDto>(categoryService.getCategory(id), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/")
+	@ApiOperation(value = "Returns all categories", notes = "Provides us al categories to which post can be tagged.", response = CategoryDto.class)
 	ResponseEntity<List<CategoryDto>> getCategories() {
 		return new ResponseEntity<List<CategoryDto>>(categoryService.getAllCategories(), HttpStatus.OK);
 	}
